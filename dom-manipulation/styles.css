@@ -1,107 +1,102 @@
 /* ============================================
-   DARK THEME FOR SESSION STORAGE DEMONSTRATION
+   TASK 2: FILTERING SYSTEM STYLES
    ============================================ */
 
-body.dark-theme {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+.filter-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
 }
 
-body.dark-theme .container {
-    background: #2c3e50;
-    color: #ecf0f1;
+.filter-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #495057;
+    font-weight: 600;
 }
 
-body.dark-theme header {
-    background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
-}
-
-body.dark-theme .sidebar {
-    background: #34495e;
-    border-right: 1px solid #1a252f;
-}
-
-body.dark-theme .categories-section h2,
-body.dark-theme .stats-section h3 {
-    color: #ecf0f1;
-}
-
-body.dark-theme .category-tag {
-    background: #4a6572;
-    color: #ecf0f1;
-}
-
-body.dark-theme .category-tag:hover {
-    background: #5d6d7e;
-}
-
-body.dark-theme .category-tag.active {
-    background: #3498db;
-    border-color: #2980b9;
-}
-
-body.dark-theme .add-category input {
-    background: #4a6572;
-    color: #ecf0f1;
-    border: 1px solid #5d6d7e;
-}
-
-body.dark-theme .stats {
-    background: #4a6572;
-    color: #ecf0f1;
-}
-
-body.dark-theme .quote-display-section {
-    background: #34495e;
-}
-
-body.dark-theme .quote-text {
-    color: #ecf0f1;
-}
-
-body.dark-theme .add-quote-section,
-body.dark-theme .favorites-section,
-body.dark-theme .import-export-section {
-    background: #34495e;
-    color: #ecf0f1;
-}
-
-body.dark-theme .form-group input,
-body.dark-theme .form-group select {
-    background: #4a6572;
-    color: #ecf0f1;
-    border: 1px solid #5d6d7e;
-}
-
-body.dark-theme .favorite-item {
-    background: #4a6572;
-    border-left: 4px solid #3498db;
-}
-
-body.dark-theme footer {
-    background: #1a252f;
-}
-
-/* Storage status indicator */
-.storage-status {
-    margin-top: 10px;
-    padding: 5px 10px;
+.category-filter-dropdown {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid #667eea;
     border-radius: 5px;
-    font-size: 0.9rem;
-    background: #e8f4fd;
-    border-left: 4px solid #3498db;
+    font-size: 1rem;
+    background: white;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-body.dark-theme .storage-status {
-    background: #2c3e50;
+.category-filter-dropdown:hover {
+    border-color: #5a67d8;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.category-filter-dropdown:focus {
+    outline: none;
+    border-color: #5a67d8;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.filter-info {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #e8f4fd;
+    border-radius: 5px;
+    border-left: 4px solid #3498db;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.filter-info i {
+    color: #3498db;
+    margin-right: 8px;
+}
+
+body.dark-theme .filter-section {
+    background: #34495e;
+    border-left-color: #3498db;
+}
+
+body.dark-theme .filter-section label {
     color: #ecf0f1;
 }
 
-.storage-status.saving {
-    border-left-color: #2ecc71;
-    background: #e8f6f3;
+body.dark-theme .category-filter-dropdown {
+    background: #4a6572;
+    color: #ecf0f1;
+    border-color: #3498db;
 }
 
-.storage-status.error {
-    border-left-color: #e74c3c;
-    background: #fdedec;
+body.dark-theme .filter-info {
+    background: #2c3e50;
+    color: #ecf0f1;
+    border-left-color: #3498db;
+}
+
+/* Active category tag highlight */
+.category-tag.filtered {
+    background: #667eea !important;
+    color: white !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+}
+
+/* No quotes message */
+.no-quotes-message {
+    text-align: center;
+    padding: 2rem;
+    background: #fff3cd;
+    border-radius: 8px;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    margin: 1rem 0;
+}
+
+body.dark-theme .no-quotes-message {
+    background: #5d4037;
+    border-color: #8d6e63;
+    color: #ffcc80;
 }

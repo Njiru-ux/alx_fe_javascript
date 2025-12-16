@@ -18,11 +18,11 @@ let favorites = [];
 // Track current category filter
 let currentCategory = 'all';
 
-// User preferences for session storage
+// User preferences
 let userPreferences = {
     theme: 'light',
     fontSize: 'medium',
-    lastQuoteIndex: null
+    lastFilter: 'all'
 };
 
 // DOM Elements
@@ -30,139 +30,271 @@ const quoteDisplay = document.getElementById('quoteDisplay');
 const categoriesList = document.getElementById('categoriesList');
 const favoritesList = document.getElementById('favoritesList');
 const existingCategories = document.getElementById('existingCategories');
+const categoryFilter = document.getElementById('categoryFilter');
+const filterInfo = document.getElementById('filterInfo');
+const lastFilterElement = document.getElementById('lastFilter');
 const totalQuotesElement = document.getElementById('totalQuotes');
 const totalCategoriesElement = document.getElementById('totalCategories');
 const lastUpdatedElement = document.getElementById('lastUpdated');
 
 // ============================================
-// INITIALIZATION
+// TASK 2: DYNAMIC CONTENT FILTERING SYSTEM
 // ============================================
 
+// STEP 1 & 2: Initialize filtering system
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Initializing Dynamic Quote Generator...");
+    console.log("Initializing Dynamic Quote Generator with Filtering System...");
     
-    // STEP 1: Load data from web storage
+    // Load data from storage
     loadDataFromStorage();
     
-    // Load session-specific preferences
-    loadSessionPreferences();
+    // Load user preferences including last filter
+    loadUserPreferences();
     
     // Setup event listeners
     setupEventListeners();
     
-    // Initialize categories
-    initializeCategories();
+    // STEP 2: Populate categories dynamically
+    populateCategories();
     
-    // Show a quote (preferably last viewed from session storage)
-    showLastOrRandomQuote();
+    // STEP 2: Filter quotes based on saved preference
+    filterQuotes();
     
     // Update statistics
     updateStats();
     
-    // Populate category select dropdown
-    populateCategorySelect();
-    
-    console.log("Application initialized successfully!");
+    console.log("Filtering system initialized successfully!");
 });
 
-// ============================================
-// WEB STORAGE IMPLEMENTATION
-// ============================================
-
-// STEP 1: Load data from local storage
-function loadDataFromStorage() {
-    console.log("Loading data from storage...");
+// STEP 2: Function to populate categories dropdown
+function populateCategories() {
+    console.log("Populating categories...");
     
-    // Load quotes from localStorage
-    const savedQuotes = localStorage.getItem('quotes');
-    if (savedQuotes) {
-        try {
-            quotes = JSON.parse(savedQuotes);
-            console.log(`Loaded ${quotes.length} quotes from localStorage`);
-        } catch (error) {
-            console.error("Error parsing quotes from localStorage:", error);
-            // Keep default quotes
-        }
+    // Clear existing options except the first one
+    while (categoryFilter.options.length > 1) {
+        categoryFilter.remove(1);
     }
     
-    // Load favorites from localStorage
-    const savedFavorites = localStorage.getItem('favorites');
-    if (savedFavorites) {
-        try {
-            favorites = JSON.parse(savedFavorites);
-            console.log(`Loaded ${favorites.length} favorites from localStorage`);
-            renderFavorites();
-        } catch (error) {
-            console.error("Error parsing favorites from localStorage:", error);
-        }
+    // Get unique categories from quotes
+    const categories = [...new Set(quotes.map(quote => quote.category))];
+    categories.sort();
+    
+    // Add categories to dropdown
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+    
+    // Also update the category tags
+    updateCategoryTags();
+    
+    // Update existing categories select (for adding quotes)
+    updateExistingCategoriesSelect();
+    
+    console.log(`Populated ${categories.length} categories`);
+}
+
+// STEP 2: Function to filter quotes based on selected category
+function filterQuotes() {
+    console.log("Filtering quotes...");
+    
+    // Get selected category
+    const selectedCategory = categoryFilter.value;
+    currentCategory = selectedCategory;
+    
+    // STEP 2: Save filter preference to localStorage
+    saveFilterPreference(selectedCategory);
+    
+    // Update UI to show current filter
+    updateFilterUI(selectedCategory);
+    
+    // Get filtered quotes
+    let filteredQuotes = quotes;
+    if (selectedCategory !== 'all') {
+        filteredQuotes = quotes.filter(quote => quote.category === selectedCategory);
     }
+    
+    // Update statistics
+    updateFilterStats(filteredQuotes.length);
+    
+    // Show a random quote from filtered list
+    showRandomQuoteFromFiltered(filteredQuotes);
+    
+    console.log(`Filter applied: ${selectedCategory}, showing ${filteredQuotes.length} quotes`);
 }
 
-// Save data to local storage
-function saveDataToStorage() {
-    console.log("Saving data to storage...");
-    
-    // Save quotes to localStorage
-    localStorage.setItem('quotes', JSON.stringify(quotes));
-    
-    // Save favorites to localStorage
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    
-    // Update last updated timestamp
-    const now = new Date();
-    lastUpdatedElement.textContent = now.toLocaleTimeString();
-    
-    console.log("Data saved to localStorage");
+// STEP 2: Save filter preference to localStorage
+function saveFilterPreference(category) {
+    userPreferences.lastFilter = category;
+    localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
+    lastFilterElement.textContent = category === 'all' ? 'All Categories' : category;
 }
 
-// STEP 1 (Optional): Session Storage for user preferences
-function loadSessionPreferences() {
-    const savedPreferences = sessionStorage.getItem('userPreferences');
+// STEP 2: Load user preferences including last filter
+function loadUserPreferences() {
+    const savedPreferences = localStorage.getItem('userPreferences');
     if (savedPreferences) {
         try {
             userPreferences = JSON.parse(savedPreferences);
-            console.log("Loaded user preferences from sessionStorage:", userPreferences);
+            console.log("Loaded user preferences:", userPreferences);
             
-            // Apply preferences if needed
+            // Apply last filter
+            if (userPreferences.lastFilter) {
+                categoryFilter.value = userPreferences.lastFilter;
+                currentCategory = userPreferences.lastFilter;
+            }
+            
+            // Apply other preferences
             applyUserPreferences();
+            
         } catch (error) {
-            console.error("Error parsing preferences from sessionStorage:", error);
+            console.error("Error parsing user preferences:", error);
         }
     }
 }
 
-function saveSessionPreferences() {
-    sessionStorage.setItem('userPreferences', JSON.stringify(userPreferences));
-    console.log("Saved preferences to sessionStorage");
+// Update filter UI
+function updateFilterUI(category) {
+    // Update filter info text
+    const categoryName = category === 'all' ? 'All Categories' : category;
+    filterInfo.innerHTML = `
+        <i class="fas fa-filter"></i> 
+        Showing quotes from: <strong>${categoryName}</strong>
+        ${category !== 'all' ? `(${quotes.filter(q => q.category === category).length} quotes)` : ''}
+    `;
+    
+    // Update category tags highlighting
+    document.querySelectorAll('.category-tag').forEach(tag => {
+        tag.classList.remove('filtered');
+        if (tag.dataset.category === category) {
+            tag.classList.add('filtered');
+        }
+    });
 }
 
-function applyUserPreferences() {
-    // Apply theme if different from current
-    if (userPreferences.theme === 'dark') {
-        document.body.classList.add('dark-theme');
+// Update category tags
+function updateCategoryTags() {
+    const categories = [...new Set(quotes.map(quote => quote.category))];
+    categories.sort();
+    categories.unshift('all');
+    
+    categoriesList.innerHTML = '';
+    
+    categories.forEach(category => {
+        const categoryElement = document.createElement('div');
+        categoryElement.className = 'category-tag';
+        categoryElement.textContent = category === 'all' ? 'All Categories' : category;
+        categoryElement.dataset.category = category;
+        
+        if (category === currentCategory) {
+            categoryElement.classList.add('filtered');
+        }
+        
+        // Click handler for category tags
+        categoryElement.addEventListener('click', function() {
+            categoryFilter.value = category;
+            filterQuotes();
+        });
+        
+        categoriesList.appendChild(categoryElement);
+    });
+}
+
+// Update existing categories select
+function updateExistingCategoriesSelect() {
+    const categories = [...new Set(quotes.map(quote => quote.category))];
+    categories.sort();
+    
+    existingCategories.innerHTML = '<option value="">Or select existing category</option>';
+    
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        existingCategories.appendChild(option);
+    });
+}
+
+// Show random quote from filtered list
+function showRandomQuoteFromFiltered(filteredQuotes) {
+    if (filteredQuotes.length === 0) {
+        quoteDisplay.innerHTML = `
+            <p class="quote-text">No quotes found for this category. Add some!</p>
+            <p class="quote-category">Category: <span>${currentCategory === 'all' ? 'All' : currentCategory}</span></p>
+            <div class="no-quotes-message">
+                <i class="fas fa-exclamation-circle"></i>
+                No quotes match the selected filter. Try a different category or add new quotes.
+            </div>
+        `;
+        return;
     }
     
-    // Apply font size
-    document.body.style.fontSize = userPreferences.fontSize === 'large' ? '18px' : 
-                                  userPreferences.fontSize === 'small' ? '14px' : '16px';
+    const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
+    const randomQuote = filteredQuotes[randomIndex];
+    
+    quoteDisplay.innerHTML = `
+        <p class="quote-text">"${randomQuote.text}"</p>
+        <p class="quote-category">Category: <span>${randomQuote.category}</span></p>
+        <div class="filter-info" id="filterInfo">
+            <i class="fas fa-filter"></i> 
+            Showing quotes from: <strong>${currentCategory === 'all' ? 'All Categories' : currentCategory}</strong>
+        </div>
+    `;
 }
 
-function updateUserPreference(key, value) {
-    userPreferences[key] = value;
-    saveSessionPreferences();
-    applyUserPreferences();
+// Update filter statistics
+function updateFilterStats(filteredCount) {
+    const totalCount = quotes.length;
+    const filterText = currentCategory === 'all' 
+        ? `Showing all ${totalCount} quotes` 
+        : `Showing ${filteredCount} of ${totalCount} quotes`;
+    
+    // Update filter info
+    document.querySelector('#filterInfo strong').textContent = 
+        currentCategory === 'all' ? 'All Categories' : currentCategory;
 }
 
 // ============================================
-// EVENT LISTENERS AND UI SETUP
+// EXISTING FUNCTIONALITY (UPDATED FOR TASK 2)
 // ============================================
 
+// Load data from storage
+function loadDataFromStorage() {
+    const savedQuotes = localStorage.getItem('quotes');
+    const savedFavorites = localStorage.getItem('favorites');
+    
+    if (savedQuotes) {
+        try {
+            quotes = JSON.parse(savedQuotes);
+        } catch (error) {
+            console.error("Error parsing quotes:", error);
+        }
+    }
+    
+    if (savedFavorites) {
+        try {
+            favorites = JSON.parse(savedFavorites);
+            renderFavorites();
+        } catch (error) {
+            console.error("Error parsing favorites:", error);
+        }
+    }
+}
+
+// Save data to storage
+function saveDataToStorage() {
+    localStorage.setItem('quotes', JSON.stringify(quotes));
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    lastUpdatedElement.textContent = new Date().toLocaleTimeString();
+}
+
+// Setup event listeners
 function setupEventListeners() {
     // Quote display button
     document.getElementById('newQuote').addEventListener('click', function() {
-        showRandomQuote();
-        // Save last viewed quote index to session storage
-        updateUserPreference('lastQuoteIndex', quotes.length - 1);
+        filterQuotes(); // This will show a random quote from current filter
     });
     
     // Favorite quote button
@@ -171,7 +303,10 @@ function setupEventListeners() {
     // Clear favorites button
     document.getElementById('clearFavorites').addEventListener('click', clearFavorites);
     
-    // Enter key support for inputs
+    // STEP 1: Category filter dropdown
+    categoryFilter.addEventListener('change', filterQuotes);
+    
+    // Enter key support
     document.getElementById('newQuoteText').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') addQuote();
     });
@@ -184,122 +319,16 @@ function setupEventListeners() {
         if (e.key === 'Enter') addNewCategory();
     });
     
-    // Theme toggle button (new feature for session storage demo)
-    const themeToggle = document.createElement('button');
-    themeToggle.id = 'themeToggle';
-    themeToggle.className = 'btn-secondary';
-    themeToggle.innerHTML = '<i class="fas fa-moon"></i> Toggle Theme';
-    themeToggle.addEventListener('click', toggleTheme);
-    
-    // Add theme toggle to controls
-    document.querySelector('.controls').appendChild(themeToggle);
+    // Add theme toggle
+    addThemeToggle();
 }
 
-function toggleTheme() {
-    const isDark = document.body.classList.toggle('dark-theme');
-    userPreferences.theme = isDark ? 'dark' : 'light';
-    saveSessionPreferences();
-    
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.innerHTML = isDark ? 
-        '<i class="fas fa-sun"></i> Light Mode' : 
-        '<i class="fas fa-moon"></i> Dark Mode';
-}
-
-// ============================================
-// CORE FUNCTIONALITY
-// ============================================
-
-function initializeCategories() {
-    const categories = [...new Set(quotes.map(quote => quote.category))];
-    categories.sort();
-    categories.unshift('all');
-    renderCategories(categories);
-}
-
-function renderCategories(categories) {
-    categoriesList.innerHTML = '';
-    
-    categories.forEach(category => {
-        const categoryElement = document.createElement('div');
-        categoryElement.className = 'category-tag';
-        categoryElement.textContent = category === 'all' ? 'All Categories' : category;
-        categoryElement.dataset.category = category;
-        
-        if (category === currentCategory) {
-            categoryElement.classList.add('active');
-        }
-        
-        categoryElement.addEventListener('click', function() {
-            setCategoryFilter(category);
-        });
-        
-        categoriesList.appendChild(categoryElement);
-    });
-}
-
-function setCategoryFilter(category) {
-    currentCategory = category;
-    
-    // Update active state
-    document.querySelectorAll('.category-tag').forEach(tag => {
-        tag.classList.remove('active');
-        if (tag.dataset.category === category) {
-            tag.classList.add('active');
-        }
-    });
-    
-    // Show a random quote from selected category
-    showRandomQuote();
-}
-
-// Task 0: showRandomQuote function
-function showRandomQuote() {
-    let filteredQuotes = quotes;
-    
-    if (currentCategory !== 'all') {
-        filteredQuotes = quotes.filter(quote => quote.category === currentCategory);
-    }
-    
-    if (filteredQuotes.length === 0) {
-        quoteDisplay.innerHTML = `
-            <p class="quote-text">No quotes found for this category. Add some!</p>
-            <p class="quote-category">Category: <span>${currentCategory}</span></p>
-        `;
-        return;
-    }
-    
-    const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
-    const randomQuote = filteredQuotes[randomIndex];
-    
-    quoteDisplay.innerHTML = `
-        <p class="quote-text">"${randomQuote.text}"</p>
-        <p class="quote-category">Category: <span>${randomQuote.category}</span></p>
-    `;
-    
-    // Save to session storage
-    updateUserPreference('lastViewedQuote', randomQuote.text);
-}
-
-function showLastOrRandomQuote() {
-    // Check if we have a last viewed quote in session storage
-    if (userPreferences.lastViewedQuote) {
-        quoteDisplay.innerHTML = `
-            <p class="quote-text">"${userPreferences.lastViewedQuote}"</p>
-            <p class="quote-category">Last Viewed Quote</p>
-        `;
-    } else {
-        showRandomQuote();
-    }
-}
-
-// Task 0: createAddQuoteForm functionality (implemented as addQuote)
+// Add quote function (updated for Task 2)
 function addQuote() {
     const quoteText = document.getElementById('newQuoteText').value.trim();
     let quoteCategory = document.getElementById('newQuoteCategory').value.trim();
     const selectedCategory = document.getElementById('existingCategories').value;
     
-    // Use selected category if provided
     if (!quoteCategory && selectedCategory) {
         quoteCategory = selectedCategory;
     }
@@ -309,7 +338,6 @@ function addQuote() {
         return;
     }
     
-    // Add new quote
     const newQuote = {
         text: quoteText,
         category: quoteCategory
@@ -321,140 +349,24 @@ function addQuote() {
     document.getElementById('newQuoteText').value = '';
     document.getElementById('newQuoteCategory').value = '';
     
-    // STEP 1: Save to local storage
-    saveDataToStorage();
+    // STEP 3: Update categories if new category added
+    if (![...new Set(quotes.map(q => q.category))].includes(quoteCategory)) {
+        populateCategories(); // Update dropdown with new category
+    }
     
-    // Update categories if new
-    updateCategories();
+    // Save to storage
+    saveDataToStorage();
     
     // Update stats
     updateStats();
     
-    // Show success message
+    // Update current filter display
+    filterQuotes();
+    
     alert('Quote added successfully!');
 }
 
-// ============================================
-// JSON IMPORT/EXPORT IMPLEMENTATION
-// ============================================
-
-// STEP 2: JSON Export Function
-function exportQuotes() {
-    console.log("Exporting quotes to JSON...");
-    
-    // Validate data
-    if (quotes.length === 0) {
-        alert('No quotes to export!');
-        return;
-    }
-    
-    // Create JSON string
-    const dataStr = JSON.stringify(quotes, null, 2);
-    
-    // Create blob and download link
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const dataUrl = URL.createObjectURL(dataBlob);
-    
-    // Create download link
-    const downloadLink = document.createElement('a');
-    downloadLink.href = dataUrl;
-    downloadLink.download = 'quotes_export_' + new Date().toISOString().split('T')[0] + '.json';
-    
-    // Trigger download
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    
-    // Clean up URL object
-    URL.revokeObjectURL(dataUrl);
-    
-    console.log("Export completed successfully");
-    alert(`Exported ${quotes.length} quotes to JSON file!`);
-}
-
-// STEP 2: JSON Import Function
-function importQuotes(event) {
-    console.log("Importing quotes from JSON file...");
-    
-    const file = event.target.files[0];
-    if (!file) {
-        console.log("No file selected");
-        return;
-    }
-    
-    // Validate file type
-    if (!file.name.endsWith('.json')) {
-        alert('Please select a JSON file (.json)');
-        return;
-    }
-    
-    const fileReader = new FileReader();
-    
-    fileReader.onload = function(event) {
-        try {
-            console.log("Parsing JSON file...");
-            const importedQuotes = JSON.parse(event.target.result);
-            
-            // Validate imported data structure
-            if (!Array.isArray(importedQuotes)) {
-                throw new Error('Imported data is not an array');
-            }
-            
-            // Validate each quote object
-            const validQuotes = importedQuotes.filter(quote => {
-                return quote && 
-                       typeof quote.text === 'string' && 
-                       typeof quote.category === 'string' &&
-                       quote.text.trim().length > 0 &&
-                       quote.category.trim().length > 0;
-            });
-            
-            if (validQuotes.length === 0) {
-                throw new Error('No valid quotes found in the file');
-            }
-            
-            // Add valid quotes to our collection
-            quotes.push(...validQuotes);
-            
-            // STEP 1: Save to local storage
-            saveDataToStorage();
-            
-            // Update UI
-            updateCategories();
-            populateCategorySelect();
-            updateStats();
-            showRandomQuote();
-            
-            console.log(`Imported ${validQuotes.length} quotes successfully`);
-            alert(`Successfully imported ${validQuotes.length} quotes!`);
-            
-            // Reset file input
-            event.target.value = '';
-            
-        } catch (error) {
-            console.error("Error importing quotes:", error);
-            alert('Error importing quotes: ' + error.message + '\n\nPlease ensure the file contains valid JSON with quote objects in the format:\n\n[\n  {\n    "text": "Quote text",\n    "category": "Category name"\n  }\n]');
-        }
-    };
-    
-    fileReader.onerror = function() {
-        console.error("Error reading file");
-        alert('Error reading the file. Please try again.');
-    };
-    
-    fileReader.readAsText(file);
-}
-
-// Alternative import function matching the task description exactly
-function importFromJsonFile(event) {
-    console.log("Importing using importFromJsonFile...");
-    importQuotes(event); // Using the same implementation
-}
-
-// ============================================
-// ADDITIONAL FUNCTIONALITY
-// ============================================
-
+// Add new category (updated for Task 2)
 function addNewCategory() {
     const newCategoryInput = document.getElementById('newCategory');
     const newCategory = newCategoryInput.value.trim();
@@ -479,35 +391,54 @@ function addNewCategory() {
     // Clear input
     newCategoryInput.value = '';
     
-    // Update categories
-    updateCategories();
+    // STEP 3: Update categories dropdown
+    populateCategories();
     
-    // Populate select
-    populateCategorySelect();
+    // Select the new category in filter
+    categoryFilter.value = newCategory;
+    filterQuotes();
     
-    alert('Category added successfully!');
+    alert(`Category "${newCategory}" added successfully!`);
 }
 
-function updateCategories() {
-    const categories = [...new Set(quotes.map(quote => quote.category))];
-    categories.sort();
-    categories.unshift('all');
-    renderCategories(categories);
+// Update statistics
+function updateStats() {
+    totalQuotesElement.textContent = quotes.length;
+    totalCategoriesElement.textContent = new Set(quotes.map(quote => quote.category)).size;
 }
 
-function populateCategorySelect() {
-    const categories = [...new Set(quotes.map(quote => quote.category))];
-    categories.sort();
+// Apply user preferences
+function applyUserPreferences() {
+    if (userPreferences.theme === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+}
+
+// Add theme toggle functionality
+function addThemeToggle() {
+    const themeToggle = document.createElement('button');
+    themeToggle.id = 'themeToggle';
+    themeToggle.className = 'btn-secondary';
+    themeToggle.innerHTML = userPreferences.theme === 'dark' 
+        ? '<i class="fas fa-sun"></i> Light Mode' 
+        : '<i class="fas fa-moon"></i> Dark Mode';
     
-    existingCategories.innerHTML = '<option value="">Or select existing category</option>';
-    
-    categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category;
-        option.textContent = category;
-        existingCategories.appendChild(option);
+    themeToggle.addEventListener('click', function() {
+        const isDark = document.body.classList.toggle('dark-theme');
+        userPreferences.theme = isDark ? 'dark' : 'light';
+        localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
+        
+        this.innerHTML = isDark 
+            ? '<i class="fas fa-sun"></i> Light Mode' 
+            : '<i class="fas fa-moon"></i> Dark Mode';
     });
+    
+    document.querySelector('.controls').appendChild(themeToggle);
 }
+
+// ============================================
+// FAVORITES FUNCTIONALITY
+// ============================================
 
 function addToFavorites() {
     const quoteTextElement = quoteDisplay.querySelector('.quote-text');
@@ -521,7 +452,6 @@ function addToFavorites() {
     const quoteText = quoteTextElement.textContent.replace(/"/g, '').trim();
     const quoteCategory = quoteCategoryElement.textContent;
     
-    // Check if already in favorites
     if (favorites.some(fav => fav.text === quoteText && fav.category === quoteCategory)) {
         alert('This quote is already in your favorites!');
         return;
@@ -535,11 +465,8 @@ function addToFavorites() {
     
     favorites.push(favoriteQuote);
     renderFavorites();
-    
-    // STEP 1: Save to local storage
     saveDataToStorage();
     
-    // Update button text temporarily
     const favoriteBtn = document.getElementById('favoriteQuote');
     const originalHTML = favoriteBtn.innerHTML;
     favoriteBtn.innerHTML = '<i class="fas fa-star"></i> Added!';
@@ -556,7 +483,22 @@ function renderFavorites() {
         return;
     }
     
-    favorites.forEach((favorite, index) => {
+    // Filter favorites based on current category if not "all"
+    let filteredFavorites = favorites;
+    if (currentCategory !== 'all') {
+        filteredFavorites = favorites.filter(fav => fav.category === currentCategory);
+        
+        if (filteredFavorites.length === 0) {
+            favoritesList.innerHTML = `
+                <p class="no-favorites">
+                    No favorites in the "${currentCategory}" category.
+                    ${favorites.length > 0 ? `You have ${favorites.length} favorites in other categories.` : ''}
+                </p>`;
+            return;
+        }
+    }
+    
+    filteredFavorites.forEach((favorite, index) => {
         const favoriteElement = document.createElement('div');
         favoriteElement.className = 'favorite-item';
         favoriteElement.innerHTML = `
@@ -577,8 +519,6 @@ function removeFavorite(index) {
     if (confirm('Are you sure you want to remove this quote from favorites?')) {
         favorites.splice(index, 1);
         renderFavorites();
-        
-        // STEP 1: Save to local storage
         saveDataToStorage();
     }
 }
@@ -592,32 +532,95 @@ function clearFavorites() {
     if (confirm('Are you sure you want to clear all favorites?')) {
         favorites = [];
         renderFavorites();
-        
-        // STEP 1: Save to local storage
         saveDataToStorage();
     }
 }
 
-function updateStats() {
-    totalQuotesElement.textContent = quotes.length;
-    totalCategoriesElement.textContent = new Set(quotes.map(quote => quote.category)).size;
-    
-    // Check when data was last saved
-    const savedQuotes = localStorage.getItem('quotes');
-    if (savedQuotes) {
-        const lastSave = new Date().toLocaleTimeString();
-        lastUpdatedElement.textContent = lastSave;
-        lastUpdatedElement.title = 'Data is being saved to localStorage';
+// ============================================
+// JSON IMPORT/EXPORT
+// ============================================
+
+function exportQuotes() {
+    if (quotes.length === 0) {
+        alert('No quotes to export!');
+        return;
     }
+    
+    const dataStr = JSON.stringify(quotes, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const dataUrl = URL.createObjectURL(dataBlob);
+    
+    const downloadLink = document.createElement('a');
+    downloadLink.href = dataUrl;
+    downloadLink.download = `quotes_${new Date().toISOString().split('T')[0]}.json`;
+    
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    
+    URL.revokeObjectURL(dataUrl);
+    
+    alert(`Exported ${quotes.length} quotes to JSON file!`);
+}
+
+function importFromJsonFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    if (!file.name.endsWith('.json')) {
+        alert('Please select a JSON file (.json)');
+        return;
+    }
+    
+    const fileReader = new FileReader();
+    
+    fileReader.onload = function(event) {
+        try {
+            const importedQuotes = JSON.parse(event.target.result);
+            
+            if (!Array.isArray(importedQuotes)) {
+                throw new Error('Imported data is not an array');
+            }
+            
+            const validQuotes = importedQuotes.filter(quote => {
+                return quote && 
+                       typeof quote.text === 'string' && 
+                       typeof quote.category === 'string' &&
+                       quote.text.trim().length > 0 &&
+                       quote.category.trim().length > 0;
+            });
+            
+            if (validQuotes.length === 0) {
+                throw new Error('No valid quotes found in the file');
+            }
+            
+            quotes.push(...validQuotes);
+            saveDataToStorage();
+            
+            // STEP 3: Update categories dropdown with new categories
+            populateCategories();
+            
+            updateStats();
+            filterQuotes();
+            
+            alert(`Successfully imported ${validQuotes.length} quotes!`);
+            
+            event.target.value = '';
+            
+        } catch (error) {
+            alert('Error importing quotes: ' + error.message);
+        }
+    };
+    
+    fileReader.readAsText(file);
 }
 
 // ============================================
-// ADDITIONAL WEB STORAGE DEMONSTRATION
+// UTILITY FUNCTIONS
 // ============================================
 
-// Function to clear all storage (for testing)
 function clearAllStorage() {
-    if (confirm('This will clear ALL saved data (quotes, favorites, preferences). Continue?')) {
+    if (confirm('This will clear ALL saved data. Continue?')) {
         localStorage.clear();
         sessionStorage.clear();
         alert('All storage cleared! Page will reload.');
@@ -625,33 +628,24 @@ function clearAllStorage() {
     }
 }
 
-// Function to show storage usage (for debugging)
 function showStorageInfo() {
     console.log("=== STORAGE INFORMATION ===");
-    console.log("LocalStorage:");
-    console.log("- quotes:", localStorage.getItem('quotes') ? JSON.parse(localStorage.getItem('quotes')).length + " items" : "empty");
-    console.log("- favorites:", localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')).length + " items" : "empty");
-    
-    console.log("\nSessionStorage:");
-    console.log("- userPreferences:", sessionStorage.getItem('userPreferences') ? "exists" : "empty");
-    
-    console.log("\nMemory:");
-    console.log("- quotes array:", quotes.length + " items");
-    console.log("- favorites array:", favorites.length + " items");
+    console.log("Current Filter:", currentCategory);
+    console.log("Quotes in storage:", localStorage.getItem('quotes') ? JSON.parse(localStorage.getItem('quotes')).length : 0);
+    console.log("User Preferences:", JSON.parse(localStorage.getItem('userPreferences') || '{}'));
     console.log("===========================");
+    
+    alert('Storage information logged to console (F12 to view)');
 }
 
-// Add storage info button for testing
+// Add storage info button
 document.addEventListener('DOMContentLoaded', function() {
     const storageInfoBtn = document.createElement('button');
     storageInfoBtn.id = 'storageInfoBtn';
     storageInfoBtn.className = 'btn-secondary';
     storageInfoBtn.innerHTML = '<i class="fas fa-database"></i> Storage Info';
     storageInfoBtn.style.marginTop = '10px';
-    storageInfoBtn.addEventListener('click', function() {
-        showStorageInfo();
-        alert('Storage information logged to console. Press F12 to view.');
-    });
+    storageInfoBtn.addEventListener('click', showStorageInfo);
     
     document.querySelector('.stats').appendChild(storageInfoBtn);
 });
