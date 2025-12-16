@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Quote Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-quote-left"></i> Dynamic Quote Generator</h1>
+            <p class="subtitle">Generate, manage, and filter your favorite quotes</p>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="categories-section">
+                    <h2><i class="fas fa-tags"></i> Categories</h2>
+                    <div id="categoriesList" class="categories-list">
+                        <!-- Categories will be dynamically added here -->
+                    </div>
+                    
+                    <div class="add-category">
+                        <input type="text" id="newCategory" placeholder="Add new category">
+                        <button onclick="addNewCategory()">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="stats-section">
+                    <h3><i class="fas fa-chart-bar"></i> Statistics</h3>
+                    <div class="stats">
+                        <p>Total Quotes: <span id="totalQuotes">0</span></p>
+                        <p>Total Categories: <span id="totalCategories">0</span></p>
+                        <p>Last Updated: <span id="lastUpdated">Never</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="quote-display-section">
+                    <div id="quoteDisplay" class="quote-display">
+                        <p class="quote-text">Click "Show New Quote" to see your first quote!</p>
+                        <p class="quote-category">Category: <span>None</span></p>
+                    </div>
+                    
+                    <div class="controls">
+                        <button id="newQuote" class="btn-primary">
+                            <i class="fas fa-random"></i> Show New Quote
+                        </button>
+                        <button id="favoriteQuote" class="btn-secondary">
+                            <i class="far fa-star"></i> Add to Favorites
+                        </button>
+                        <button id="clearFavorites" class="btn-danger">
+                            <i class="fas fa-trash"></i> Clear Favorites
+                        </button>
+                    </div>
+                </div>
+
+                <div class="add-quote-section">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Quote</h2>
+                    <div class="form-group">
+                        <input type="text" id="newQuoteText" placeholder="Enter a new quote">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="newQuoteCategory" placeholder="Enter quote category">
+                        <select id="existingCategories">
+                            <option value="">Or select existing category</option>
+                        </select>
+                    </div>
+                    <button onclick="addQuote()" class="btn-success">
+                        <i class="fas fa-save"></i> Add Quote
+                    </button>
+                </div>
+
+                <div class="favorites-section">
+                    <h2><i class="fas fa-star"></i> Favorite Quotes</h2>
+                    <div id="favoritesList" class="favorites-list">
+                        <!-- Favorite quotes will appear here -->
+                    </div>
+                </div>
+                
+                <div class="import-export-section">
+                    <h2><i class="fas fa-file-export"></i> Import/Export</h2>
+                    <div class="import-export-controls">
+                        <button onclick="exportQuotes()" class="btn-primary">
+                            <i class="fas fa-download"></i> Export Quotes
+                        </button>
+                        <label class="btn-secondary">
+                            <i class="fas fa-upload"></i> Import Quotes
+                            <input type="file" accept=".json" onchange="importQuotes(event)" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>DOM Manipulation, Web Storage, and JSON Data Project</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
