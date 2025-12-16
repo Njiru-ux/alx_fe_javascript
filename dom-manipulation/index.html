@@ -36,6 +36,7 @@
                         <p>Total Quotes: <span id="totalQuotes">0</span></p>
                         <p>Total Categories: <span id="totalCategories">0</span></p>
                         <p>Last Updated: <span id="lastUpdated">Never</span></p>
+                        <!-- Storage info button will be added dynamically -->
                     </div>
                 </div>
             </div>
@@ -57,6 +58,7 @@
                         <button id="clearFavorites" class="btn-danger">
                             <i class="fas fa-trash"></i> Clear Favorites
                         </button>
+                        <!-- Theme toggle button will be added dynamically -->
                     </div>
                 </div>
 
@@ -84,22 +86,37 @@
                 </div>
                 
                 <div class="import-export-section">
-                    <h2><i class="fas fa-file-export"></i> Import/Export</h2>
+                    <h2><i class="fas fa-file-export"></i> Import/Export (JSON Handling)</h2>
+                    <div class="storage-status" id="storageStatus">
+                        <i class="fas fa-info-circle"></i> 
+                        Data is saved automatically to localStorage
+                    </div>
                     <div class="import-export-controls">
                         <button onclick="exportQuotes()" class="btn-primary">
-                            <i class="fas fa-download"></i> Export Quotes
+                            <i class="fas fa-download"></i> Export Quotes to JSON
                         </button>
                         <label class="btn-secondary">
-                            <i class="fas fa-upload"></i> Import Quotes
-                            <input type="file" accept=".json" onchange="importQuotes(event)" style="display: none;">
+                            <i class="fas fa-upload"></i> Import Quotes from JSON
+                            <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" style="display: none;">
                         </label>
+                        <button onclick="clearAllStorage()" class="btn-danger">
+                            <i class="fas fa-trash-alt"></i> Clear All Storage
+                        </button>
                     </div>
+                    <p class="help-text">
+                        <small>
+                            <i class="fas fa-info-circle"></i>
+                            Export saves all quotes to a JSON file. Import adds quotes from a JSON file to your collection.
+                            All data is automatically saved to localStorage.
+                        </small>
+                    </p>
                 </div>
             </div>
         </div>
 
         <footer>
             <p>DOM Manipulation, Web Storage, and JSON Data Project</p>
+            <p><small>Task 0: Dynamic Content Generator | Task 1: Web Storage & JSON Handling</small></p>
         </footer>
     </div>
 
