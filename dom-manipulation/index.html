@@ -4,23 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Quote Generator</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        /* Minimal styles - won't break anything */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { padding: 20px; background: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { text-align: center; margin-bottom: 20px; color: #333; }
-        section { margin: 20px 0; padding: 20px; background: #f9f9f9; border-radius: 8px; border: 1px solid #ddd; }
-        h2 { color: #444; margin-bottom: 15px; }
-        .quote-display { padding: 20px; background: white; border-radius: 5px; border-left: 4px solid #007bff; margin: 15px 0; }
-        .quote-text { font-size: 1.2em; font-style: italic; margin-bottom: 10px; }
-        .quote-category { color: #666; font-weight: bold; }
-        input, select, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
-        button { background: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; }
-        button:hover { background: #0056b3; }
-        .category-tag { display: inline-block; padding: 5px 10px; margin: 5px; background: #e9ecef; border-radius: 15px; cursor: pointer; }
-        .category-tag.active { background: #007bff; color: white; }
-        #syncStatus { padding: 10px; margin: 10px 0; background: #d4edda; border-left: 4px solid #28a745; }
+        /* Minimal inline styles for backup */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 20px auto; background: white; padding: 20px; }
+        h1 { text-align: center; }
+        section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        button, input, select { padding: 10px; margin: 5px 0; }
     </style>
 </head>
 <body>
@@ -37,10 +29,10 @@
             <button id="newQuote">Show New Quote</button>
         </section>
         
-        <!-- TASK 0: Add Quote Form -->
+        <!-- TASK 0: Add Quote Form (Dynamically created by createAddQuoteForm) -->
         <section id="addQuoteSection">
             <h2>Add New Quote</h2>
-            <!-- Form created by createAddQuoteForm() -->
+            <!-- Form will be created by createAddQuoteForm() -->
         </section>
         
         <!-- TASK 2: Filtering -->
@@ -48,6 +40,7 @@
             <h2>Filter Quotes</h2>
             <select id="categoryFilter" onchange="filterQuotes()">
                 <option value="all">All Categories</option>
+                <!-- Categories populated by populateCategories() -->
             </select>
             <div id="categoriesList"></div>
         </section>
@@ -55,11 +48,8 @@
         <!-- TASK 3: Server Sync -->
         <section>
             <h2>Server Sync</h2>
-            <div id="syncStatus" style="display: none;"></div>
+            <div id="syncStatus"></div>
             <button onclick="syncWithServer()">Sync Now</button>
-            <button onclick="postToServer()">Post to Server</button>
-            <button onclick="syncQuotes()">Full Sync</button>
-            <button onclick="startPeriodicSync()">Start Auto-sync</button>
         </section>
         
         <!-- TASK 1: Import/Export -->
