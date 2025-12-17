@@ -1,102 +1,333 @@
-/* ============================================
-   TASK 2: FILTERING SYSTEM STYLES
-   ============================================ */
+/* ==================== BASE STYLES ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-.filter-section {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* ==================== HEADER ==================== */
+h1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 0;
+}
+
+/* ==================== SECTIONS ==================== */
+section {
+    margin: 1.5rem;
+    padding: 1.5rem;
     background: #f8f9fa;
     border-radius: 8px;
-    border-left: 4px solid #667eea;
+    border: 1px solid #e9ecef;
+    transition: transform 0.2s ease;
 }
 
-.filter-section label {
-    display: block;
-    margin-bottom: 0.5rem;
+section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
     color: #495057;
-    font-weight: 600;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #667eea;
+    font-size: 1.5rem;
 }
 
-.category-filter-dropdown {
+h3 {
+    color: #6c757d;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+/* ==================== FORM ELEMENTS ==================== */
+input[type="text"],
+select {
     width: 100%;
-    padding: 10px 15px;
-    border: 2px solid #667eea;
-    border-radius: 5px;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 2px solid #ced4da;
+    border-radius: 6px;
     font-size: 1rem;
-    background: white;
-    color: #495057;
-    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.category-filter-dropdown:hover {
-    border-color: #5a67d8;
+input[type="text"]:focus,
+select:focus {
+    outline: none;
+    border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.category-filter-dropdown:focus {
-    outline: none;
-    border-color: #5a67d8;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+label {
+    display: inline-flex;
+    align-items: center;
+    margin: 0.5rem 1rem 0.5rem 0;
+    font-weight: 500;
+    cursor: pointer;
 }
 
-.filter-info {
-    margin-top: 1rem;
-    padding: 0.75rem;
-    background: #e8f4fd;
-    border-radius: 5px;
-    border-left: 4px solid #3498db;
-    color: #2c3e50;
-    font-size: 0.95rem;
+input[type="checkbox"],
+input[type="radio"] {
+    margin-right: 0.5rem;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
 }
 
-.filter-info i {
-    color: #3498db;
-    margin-right: 8px;
+/* ==================== BUTTONS ==================== */
+button {
+    padding: 0.8rem 1.5rem;
+    margin: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-body.dark-theme .filter-section {
-    background: #34495e;
-    border-left-color: #3498db;
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-body.dark-theme .filter-section label {
-    color: #ecf0f1;
+button:active {
+    transform: translateY(0);
 }
 
-body.dark-theme .category-filter-dropdown {
-    background: #4a6572;
-    color: #ecf0f1;
-    border-color: #3498db;
+.btn-primary {
+    background: #667eea;
+    color: white;
 }
 
-body.dark-theme .filter-info {
-    background: #2c3e50;
-    color: #ecf0f1;
-    border-left-color: #3498db;
+.btn-primary:hover {
+    background: #5a67d8;
 }
 
-/* Active category tag highlight */
-.category-tag.filtered {
-    background: #667eea !important;
-    color: white !important;
-    transform: scale(1.05);
+.btn-secondary {
+    background: #48bb78;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #38a169;
+}
+
+.btn-danger {
+    background: #f56565;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #e53e3e;
+}
+
+.btn-warning {
+    background: #ed8936;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #dd6b20;
+}
+
+/* ==================== QUOTE DISPLAY ==================== */
+.quote-display {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    text-align: center;
+    border-left: 5px solid #667eea;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.quote-display p {
+    font-size: 1.3rem;
+    font-style: italic;
+    color: #2d3748;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.quote-display strong {
+    color: #667eea;
+    font-weight: 600;
+}
+
+/* ==================== CATEGORY TAGS ==================== */
+.category-tag {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0.3rem;
+    background: #e9ecef;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    color: #495057;
+}
+
+.category-tag:hover {
+    background: #dee2e6;
+    transform: translateY(-2px);
+}
+
+.category-tag.active {
+    background: #667eea;
+    color: white;
     box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
 }
 
-/* No quotes message */
-.no-quotes-message {
-    text-align: center;
-    padding: 2rem;
-    background: #fff3cd;
-    border-radius: 8px;
-    border: 1px solid #ffeaa7;
-    color: #856404;
+/* ==================== FAVORITES ==================== */
+#favoritesList {
+    max-height: 300px;
+    overflow-y: auto;
     margin: 1rem 0;
+    padding-right: 10px;
 }
 
-body.dark-theme .no-quotes-message {
-    background: #5d4037;
-    border-color: #8d6e63;
-    color: #ffcc80;
+.favorite-item {
+    background: white;
+    padding: 1rem;
+    margin: 0.8rem 0;
+    border-radius: 6px;
+    border-left: 4px solid #48bb78;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
 }
+
+.favorite-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-item p {
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.favorite-item small {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.favorite-item button {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* ==================== SYNC STATUS ==================== */
+#syncStatus {
+    padding: 0.8rem;
+    margin: 1rem 0;
+    border-radius: 6px;
+    font-weight: 500;
+    display: none;
+}
+
+#syncStatus:not(:empty) {
+    display: block;
+    background: #e8f4fd;
+    border-left: 4px solid #4299e1;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        border-radius: 8px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+        padding: 1rem;
+    }
+    
+    section {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    button {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+    
+    .button-group {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/* ==================== SCROLLBAR STYLING ==================== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* ==================== HELPER CLASSES ==================== */
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.text-center { text-align: center; }
+.text-muted { color: #6c757d; }

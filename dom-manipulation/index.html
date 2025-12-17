@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Quote Generator</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Reset and base styles */
+        /* ==================== BASE STYLES ==================== */
         * {
             margin: 0;
             padding: 0;
@@ -14,434 +14,818 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
+        }
+
+        .container {
             max-width: 1000px;
             margin: 0 auto;
-        }
-
-        /* Header */
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            margin: 1.5rem 0 1rem 0;
-            color: #2c3e50;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #eee;
-        }
-
-        h3 {
-            font-size: 1.4rem;
-            margin: 1.2rem 0 0.8rem 0;
-            color: #34495e;
-        }
-
-        /* Main container */
-        .container {
             background: white;
-            padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
 
-        /* Sections */
+        /* ==================== HEADER ==================== */
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 0;
+        }
+
+        /* ==================== SECTIONS ==================== */
         section {
-            margin-bottom: 2.5rem;
+            margin: 1.5rem;
             padding: 1.5rem;
             background: #f8f9fa;
             border-radius: 8px;
             border: 1px solid #e9ecef;
+            transition: transform 0.2s ease;
         }
 
-        .sync-section {
-            background: #e8f4f8;
-            border-color: #b8e2f2;
+        section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* Form elements */
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
+        h2 {
             color: #495057;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+            font-size: 1.5rem;
         }
 
+        h3 {
+            color: #6c757d;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* ==================== FORM ELEMENTS ==================== */
         input[type="text"],
         select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
             border: 2px solid #ced4da;
             border-radius: 6px;
             font-size: 1rem;
-            transition: border-color 0.15s ease-in-out;
+            transition: all 0.3s ease;
         }
 
         input[type="text"]:focus,
         select:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        small {
-            display: block;
-            margin-top: 0.5rem;
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-
-        /* Checkboxes and radio buttons */
-        .checkbox-group {
-            display: flex;
+        label {
+            display: inline-flex;
             align-items: center;
-            margin: 0.8rem 0;
+            margin: 0.5rem 1rem 0.5rem 0;
+            font-weight: 500;
+            cursor: pointer;
         }
 
         input[type="checkbox"],
         input[type="radio"] {
-            margin-right: 10px;
+            margin-right: 0.5rem;
             width: 18px;
             height: 18px;
             cursor: pointer;
         }
 
-        .checkbox-group label {
-            margin: 0;
-            font-weight: normal;
-            cursor: pointer;
-        }
-
-        /* Buttons */
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-
+        /* ==================== BUTTONS ==================== */
         button {
-            padding: 10px 20px;
+            padding: 0.8rem 1.5rem;
+            margin: 0.5rem;
             border: none;
             border-radius: 6px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
+            transition: all 0.3s ease;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
 
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
         .btn-primary {
-            background: #3498db;
+            background: #667eea;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #2980b9;
-            transform: translateY(-1px);
+            background: #5a67d8;
         }
 
         .btn-secondary {
-            background: #2ecc71;
+            background: #48bb78;
             color: white;
         }
 
         .btn-secondary:hover {
-            background: #27ae60;
-            transform: translateY(-1px);
+            background: #38a169;
         }
 
         .btn-danger {
-            background: #e74c3c;
+            background: #f56565;
             color: white;
         }
 
         .btn-danger:hover {
-            background: #c0392b;
-            transform: translateY(-1px);
+            background: #e53e3e;
         }
 
-        .btn-outline {
-            background: white;
-            color: #3498db;
-            border: 2px solid #3498db;
-        }
-
-        .btn-outline:hover {
-            background: #3498db;
+        .btn-warning {
+            background: #ed8936;
             color: white;
         }
 
-        /* Favorite quotes section */
-        #favoritesList {
-            min-height: 100px;
-            padding: 15px;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid #dee2e6;
-            margin-top: 10px;
+        .btn-warning:hover {
+            background: #dd6b20;
         }
 
-        .favorite-item {
-            padding: 10px;
-            margin: 8px 0;
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            border-radius: 4px;
-        }
-
-        .no-favorites {
-            text-align: center;
-            color: #6c757d;
-            font-style: italic;
-            padding: 20px;
-        }
-
-        /* Quote display */
+        /* ==================== QUOTE DISPLAY ==================== */
         .quote-display {
             background: white;
-            padding: 20px;
+            padding: 2rem;
             border-radius: 8px;
-            border: 2px solid #3498db;
             margin: 1rem 0;
             text-align: center;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         }
 
-        .quote-text {
+        .quote-display p {
             font-size: 1.3rem;
             font-style: italic;
-            color: #2c3e50;
-            margin-bottom: 10px;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            line-height: 1.5;
         }
 
-        .quote-category {
-            color: #3498db;
+        .quote-display strong {
+            color: #667eea;
             font-weight: 600;
         }
 
-        /* Controls */
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin: 1.5rem 0;
+        /* ==================== CATEGORY TAGS ==================== */
+        .category-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.3rem;
+            background: #e9ecef;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #495057;
         }
 
-        /* Import/Export section */
-        .import-export {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-top: 1rem;
+        .category-tag:hover {
+            background: #dee2e6;
+            transform: translateY(-2px);
         }
 
-        /* Footer */
-        footer {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #dee2e6;
-            color: #6c757d;
+        .category-tag.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+        }
+
+        /* ==================== FAVORITES ==================== */
+        #favoritesList {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 1rem 0;
+            padding-right: 10px;
+        }
+
+        .favorite-item {
+            background: white;
+            padding: 1rem;
+            margin: 0.8rem 0;
+            border-radius: 6px;
+            border-left: 4px solid #48bb78;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .favorite-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .favorite-item p {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .favorite-item small {
+            color: #718096;
             font-size: 0.9rem;
         }
 
-        footer p {
-            margin: 5px 0;
+        .favorite-item button {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
-        /* Responsive */
+        /* ==================== SYNC STATUS ==================== */
+        #syncStatus {
+            padding: 0.8rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+            font-weight: 500;
+            display: none;
+        }
+
+        #syncStatus:not(:empty) {
+            display: block;
+            background: #e8f4fd;
+            border-left: 4px solid #4299e1;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
         @media (max-width: 768px) {
             body {
                 padding: 10px;
             }
             
             .container {
-                padding: 20px;
+                border-radius: 8px;
             }
             
-            .button-group,
-            .controls {
-                flex-direction: column;
+            h1 {
+                font-size: 1.8rem;
+                padding: 1rem;
+            }
+            
+            section {
+                margin: 1rem;
+                padding: 1rem;
             }
             
             button {
                 width: 100%;
+                margin: 0.5rem 0;
+            }
+            
+            .button-group {
+                display: flex;
+                flex-direction: column;
             }
         }
 
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #1a1a1a;
-                color: #e0e0e0;
-            }
-            
-            .container {
-                background: #2d2d2d;
-            }
-            
-            section {
-                background: #333;
-                border-color: #444;
-            }
-            
-            input[type="text"],
-            select {
-                background: #333;
-                color: #e0e0e0;
-                border-color: #555;
-            }
-            
-            #favoritesList {
-                background: #333;
-                border-color: #444;
-            }
+        /* ==================== SCROLLBAR STYLING ==================== */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* ==================== HELPER CLASSES ==================== */
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .text-center { text-align: center; }
+        .text-muted { color: #6c757d; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Dynamic Quote Generator</h1>
+        <h1><i class="fas fa-quote-left"></i> Dynamic Quote Generator</h1>
         
-        <section class="quote-display-section">
-            <div id="quoteDisplay" class="quote-display">
-                <p class="quote-text">"The only way to do great work is to love what you do."</p>
-                <p class="quote-category">Category: Inspiration</p>
-            </div>
-            
-            <div class="controls">
-                <button id="newQuote" class="btn-primary">
-                    Show New Quote
-                </button>
-                <button id="favoriteQuote" class="btn-secondary">
-                    Add to Favorites
-                </button>
-            </div>
-        </section>
-
-        <section class="sync-section">
-            <h2>Server Sync Settings</h2>
-            
-            <div class="form-group">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="autoSync" checked>
-                    <label for="autoSync">Auto-sync: Interval</label>
-                </div>
-                <select id="syncInterval">
-                    <option value="30000">30 seconds</option>
-                    <option value="60000" selected>1 minute</option>
-                    <option value="300000">5 minutes</option>
-                    <option value="600000">10 minutes</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Sync Strategy</label>
-                <div class="checkbox-group">
-                    <input type="radio" id="strategyServer" name="syncStrategy" checked>
-                    <label for="strategyServer">Server wins (default)</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="radio" id="strategyOverwrite" name="syncStrategy">
-                    <label for="strategyOverwrite">Overwrite with Server</label>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Server URL</label>
-                <input type="text" id="serverUrl" value="https://jsonplaceholder.typicode.com/posts">
-                <small>Using JSONPlaceholder mock API</small>
-            </div>
-            
-            <div class="button-group">
-                <button onclick="syncWithServer()" class="btn-primary">
-                    Sync Now
-                </button>
-                <button onclick="exportLocalData()" class="btn-outline">
-                    Backup Local Data
-                </button>
-            </div>
-        </section>
-
+        <!-- Quote Display Section -->
         <section>
-            <h2>Add New Quote</h2>
-            
-            <div class="form-group">
-                <input type="text" id="newQuoteText" placeholder="Enter a new quote">
+            <h2><i class="fas fa-quote-right"></i> Current Quote</h2>
+            <div id="quoteDisplay" class="quote-display">
+                <p>"Click 'Show New Quote' to begin!"</p>
+                <p><strong>Category:</strong> <span id="currentCategory">None</span></p>
             </div>
-            
-            <div class="form-group">
-                <input type="text" id="newQuoteCategory" placeholder="Enter quote category">
+            <div class="button-group">
+                <button id="newQuote" class="btn-primary">
+                    <i class="fas fa-random"></i> Show New Quote
+                </button>
+                <button id="addToFavorites" class="btn-secondary">
+                    <i class="fas fa-star"></i> Add to Favorites
+                </button>
             </div>
-            
+        </section>
+        
+        <!-- Filter Section -->
+        <section>
+            <h2><i class="fas fa-filter"></i> Filter Quotes</h2>
             <div class="form-group">
-                <select id="existingCategories">
-                    <option value="">Or select existing category</option>
-                    <option value="Inspiration">Inspiration</option>
-                    <option value="Life">Life</option>
-                    <option value="Motivation">Motivation</option>
+                <label for="categoryFilter">Filter by Category:</label>
+                <select id="categoryFilter" onchange="filterQuotes()">
+                    <option value="all">All Categories</option>
                 </select>
             </div>
-            
-            <button onclick="addQuote()" class="btn-secondary">
-                Add Quote
+            <div class="mt-2">
+                <p class="text-muted">Quick categories:</p>
+                <div id="categoriesList"></div>
+            </div>
+        </section>
+        
+        <!-- Add Quote Section -->
+        <section>
+            <h2><i class="fas fa-plus-circle"></i> Add New Quote</h2>
+            <div class="form-group">
+                <input type="text" id="newQuoteText" placeholder="Enter quote text...">
+            </div>
+            <div class="form-group">
+                <input type="text" id="newQuoteCategory" placeholder="Enter category...">
+                <select id="existingCategories" class="mt-1">
+                    <option value="">Or select existing category</option>
+                </select>
+            </div>
+            <button onclick="addQuote()" class="btn-primary">
+                <i class="fas fa-save"></i> Add Quote
             </button>
         </section>
-
+        
+        <!-- Server Sync Section -->
         <section>
-            <h2>Favorite Quotes</h2>
-            <div id="favoritesList" class="favorites-list">
-                <div class="no-favorites">No favorite quotes yet. Add some!</div>
+            <h2><i class="fas fa-sync-alt"></i> Server Sync</h2>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="autoSync"> Enable Auto-sync
+                </label>
+                <select id="syncInterval" class="mt-1">
+                    <option value="30000">Every 30 seconds</option>
+                    <option value="60000">Every minute</option>
+                    <option value="300000">Every 5 minutes</option>
+                </select>
             </div>
+            <div class="button-group">
+                <button onclick="syncWithServer()" class="btn-warning">
+                    <i class="fas fa-sync"></i> Sync Now
+                </button>
+                <button onclick="showSyncLog()" class="btn-secondary">
+                    <i class="fas fa-history"></i> View Sync Log
+                </button>
+            </div>
+            <div id="syncStatus" class="mt-2"></div>
         </section>
-
-        <section class="import-export">
-            <h3>Import/Export</h3>
-            
+        
+        <!-- Favorites Section -->
+        <section>
+            <h2><i class="fas fa-heart"></i> Favorite Quotes</h2>
+            <div id="favoritesList">
+                <p class="text-muted text-center">No favorite quotes yet.</p>
+            </div>
+            <button onclick="clearFavorites()" class="btn-danger">
+                <i class="fas fa-trash"></i> Clear Favorites
+            </button>
+        </section>
+        
+        <!-- Import/Export Section -->
+        <section>
+            <h2><i class="fas fa-file-export"></i> Import/Export</h2>
             <div class="button-group">
                 <button onclick="exportQuotes()" class="btn-primary">
-                    Export Quotes
+                    <i class="fas fa-download"></i> Export Quotes
                 </button>
                 <button onclick="document.getElementById('importFile').click()" class="btn-secondary">
-                    Import Quotes
+                    <i class="fas fa-upload"></i> Import Quotes
                 </button>
-                <button onclick="clearAllStorage()" class="btn-danger">
-                    Clear Storage
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importFromJsonFile(event)">
+                <button onclick="clearAllData()" class="btn-danger">
+                    <i class="fas fa-broom"></i> Clear All Data
                 </button>
             </div>
-            
-            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importFromJsonFile(event)">
         </section>
-
-        <footer>
-            <p>DOM Manipulation, Web Storage, and JSON Data Project</p>
-            <p>Task 0: Dynamic Content Generator | Task 1: Web Storage & JSON Handling | Task 2: Dynamic Content Filtering | Task 3: Server Sync & Conflict Resolution</p>
-        </footer>
     </div>
 
-    <script src="script.js"></script>
     <script>
-        // Initialize the application
+        // ==================== INITIAL DATA ====================
+        let quotes = [
+            { id: 1, text: "The only way to do great work is to love what you do.", category: "Inspiration" },
+            { id: 2, text: "Life is what happens when you're busy making other plans.", category: "Life" },
+            { id: 3, text: "The future belongs to those who believe in the beauty of their dreams.", category: "Dreams" },
+            { id: 4, text: "It is during our darkest moments that we must focus to see the light.", category: "Perseverance" }
+        ];
+
+        let favorites = [];
+        let currentCategory = 'all';
+        let syncHistory = [];
+        let syncInterval = null;
+
+        // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
-            // Load any saved data
-            if (typeof initApp === 'function') {
-                initApp();
-            }
+            // Load from localStorage
+            loadFromStorage();
+            
+            // Initialize UI
+            showRandomQuote();
+            populateCategories();
+            renderFavorites();
+            
+            // Setup event listeners
+            document.getElementById('newQuote').addEventListener('click', showRandomQuote);
+            document.getElementById('addToFavorites').addEventListener('click', addToFavorites);
+            document.getElementById('autoSync').addEventListener('change', toggleAutoSync);
         });
+
+        // ==================== TASK 0: DYNAMIC CONTENT ====================
+        function showRandomQuote() {
+            const filtered = currentCategory === 'all' 
+                ? quotes 
+                : quotes.filter(q => q.category === currentCategory);
+            
+            if (filtered.length === 0) {
+                document.getElementById('quoteDisplay').innerHTML = 
+                    '<p>No quotes in this category</p><p><strong>Category:</strong> ' + currentCategory + '</p>';
+                return;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * filtered.length);
+            const quote = filtered[randomIndex];
+            
+            document.getElementById('quoteDisplay').innerHTML = `
+                <p>"${quote.text}"</p>
+                <p><strong>Category:</strong> ${quote.category}</p>
+            `;
+            document.getElementById('currentCategory').textContent = quote.category;
+        }
+
+        function addQuote() {
+            const text = document.getElementById('newQuoteText').value.trim();
+            let category = document.getElementById('newQuoteCategory').value.trim();
+            const existing = document.getElementById('existingCategories').value;
+            
+            if (!category && existing) category = existing;
+            if (!text || !category) {
+                alert('Please enter both quote text and category');
+                return;
+            }
+            
+            const newQuote = {
+                id: Date.now(),
+                text: text,
+                category: category
+            };
+            
+            quotes.push(newQuote);
+            document.getElementById('newQuoteText').value = '';
+            document.getElementById('newQuoteCategory').value = '';
+            
+            saveToStorage();
+            populateCategories();
+            showRandomQuote();
+            
+            alert('Quote added successfully!');
+        }
+
+        // ==================== TASK 1: WEB STORAGE & JSON ====================
+        function loadFromStorage() {
+            const savedQuotes = localStorage.getItem('quotes');
+            const savedFavorites = localStorage.getItem('favorites');
+            const savedSync = localStorage.getItem('syncHistory');
+            
+            if (savedQuotes) quotes = JSON.parse(savedQuotes);
+            if (savedFavorites) favorites = JSON.parse(savedFavorites);
+            if (savedSync) syncHistory = JSON.parse(savedSync);
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('quotes', JSON.stringify(quotes));
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            localStorage.setItem('syncHistory', JSON.stringify(syncHistory));
+        }
+
+        function exportQuotes() {
+            const data = JSON.stringify(quotes, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'quotes.json';
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            alert(`Exported ${quotes.length} quotes`);
+        }
+
+        function importFromJsonFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) throw new Error('Invalid format');
+                    
+                    quotes.push(...imported);
+                    saveToStorage();
+                    populateCategories();
+                    showRandomQuote();
+                    
+                    alert(`Imported ${imported.length} quotes!`);
+                    event.target.value = '';
+                } catch (error) {
+                    alert('Import error: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function addToFavorites() {
+            const quoteElement = document.querySelector('#quoteDisplay p');
+            if (!quoteElement) return;
+            
+            const text = quoteElement.textContent.replace(/"/g, '').trim();
+            if (!text || text === 'No quotes in this category') {
+                alert('No quote to add');
+                return;
+            }
+            
+            if (favorites.some(f => f.text === text)) {
+                alert('Already in favorites');
+                return;
+            }
+            
+            const category = document.querySelector('#quoteDisplay strong')?.nextSibling?.textContent?.trim() || 'Unknown';
+            
+            favorites.push({
+                text: text,
+                category: category,
+                date: new Date().toLocaleString()
+            });
+            
+            saveToStorage();
+            renderFavorites();
+            alert('Added to favorites!');
+        }
+
+        function renderFavorites() {
+            const container = document.getElementById('favoritesList');
+            if (favorites.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center">No favorite quotes yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = favorites.map((fav, index) => `
+                <div class="favorite-item">
+                    <p>"${fav.text}"</p>
+                    <small>${fav.category} • ${fav.date}</small>
+                    <button onclick="removeFavorite(${index})" class="btn-danger" style="padding: 0.3rem 0.8rem; font-size: 0.9rem;">
+                        <i class="fas fa-times"></i> Remove
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeFavorite(index) {
+            favorites.splice(index, 1);
+            saveToStorage();
+            renderFavorites();
+        }
+
+        function clearFavorites() {
+            if (confirm('Clear all favorites?')) {
+                favorites = [];
+                saveToStorage();
+                renderFavorites();
+            }
+        }
+
+        // ==================== TASK 2: CONTENT FILTERING ====================
+        function populateCategories() {
+            const categories = ['all', ...new Set(quotes.map(q => q.category))];
+            const filter = document.getElementById('categoryFilter');
+            const existing = document.getElementById('existingCategories');
+            const tags = document.getElementById('categoriesList');
+            
+            // Update filter dropdown
+            filter.innerHTML = '<option value="all">All Categories</option>';
+            existing.innerHTML = '<option value="">Or select existing category</option>';
+            tags.innerHTML = '';
+            
+            categories.forEach(cat => {
+                if (cat === 'all') return;
+                
+                // Add to filter dropdown
+                const option1 = document.createElement('option');
+                option1.value = cat;
+                option1.textContent = cat;
+                filter.appendChild(option1);
+                
+                // Add to existing categories
+                const option2 = document.createElement('option');
+                option2.value = cat;
+                option2.textContent = cat;
+                existing.appendChild(option2);
+                
+                // Add category tag
+                const tag = document.createElement('span');
+                tag.className = `category-tag ${currentCategory === cat ? 'active' : ''}`;
+                tag.textContent = cat;
+                tag.onclick = () => {
+                    currentCategory = cat;
+                    document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+                    tag.classList.add('active');
+                    filter.value = cat;
+                    showRandomQuote();
+                };
+                tags.appendChild(tag);
+            });
+        }
+
+        function filterQuotes() {
+            const filter = document.getElementById('categoryFilter');
+            currentCategory = filter.value;
+            
+            // Update active tag
+            document.querySelectorAll('.category-tag').forEach(tag => {
+                tag.classList.remove('active');
+                if (tag.textContent === currentCategory) {
+                    tag.classList.add('active');
+                }
+            });
+            
+            showRandomQuote();
+        }
+
+        // ==================== TASK 3: SERVER SYNC ====================
+        async function syncWithServer() {
+            try {
+                updateSyncStatus('Syncing with server...');
+                
+                // 1. Fetch from JSONPlaceholder (REQUIRED)
+                const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3');
+                if (!response.ok) throw new Error(`Server error: ${response.status}`);
+                const serverData = await response.json();
+                
+                // 2. Transform to quotes
+                const serverQuotes = serverData.map(post => ({
+                    id: `server_${post.id}`,
+                    text: post.title.substring(0, 50),
+                    category: 'Server',
+                    source: 'server',
+                    timestamp: new Date().toISOString()
+                }));
+                
+                // 3. Add sample server quote
+                serverQuotes.push({
+                    id: 'server_sample',
+                    text: 'Successfully synced from server!',
+                    category: 'Sync Demo',
+                    source: 'server'
+                });
+                
+                // 4. Merge with local quotes (conflict resolution)
+                const result = { added: 0, conflicts: 0 };
+                
+                serverQuotes.forEach(serverQuote => {
+                    const existingIndex = quotes.findIndex(q => q.id === serverQuote.id);
+                    
+                    if (existingIndex === -1) {
+                        // New quote from server
+                        quotes.push(serverQuote);
+                        result.added++;
+                    } else {
+                        // Conflict - server wins
+                        quotes[existingIndex] = serverQuote;
+                        result.conflicts++;
+                    }
+                });
+                
+                // 5. Save and update
+                saveToStorage();
+                populateCategories();
+                showRandomQuote();
+                
+                // 6. Record sync
+                syncHistory.push({
+                    timestamp: new Date().toISOString(),
+                    added: result.added,
+                    conflicts: result.conflicts,
+                    total: quotes.length
+                });
+                saveToStorage();
+                
+                updateSyncStatus(`Sync complete: ${result.added} added, ${result.conflicts} updated`);
+                
+            } catch (error) {
+                updateSyncStatus(`Sync failed: ${error.message}`);
+            }
+        }
+
+        function toggleAutoSync() {
+            const checkbox = document.getElementById('autoSync');
+            const interval = parseInt(document.getElementById('syncInterval').value);
+            
+            if (checkbox.checked) {
+                if (syncInterval) clearInterval(syncInterval);
+                syncInterval = setInterval(syncWithServer, interval);
+                updateSyncStatus('Auto-sync enabled');
+            } else {
+                if (syncInterval) clearInterval(syncInterval);
+                syncInterval = null;
+                updateSyncStatus('Auto-sync disabled');
+            }
+        }
+
+        function updateSyncStatus(message) {
+            const status = document.getElementById('syncStatus');
+            status.textContent = message;
+            setTimeout(() => {
+                if (status.textContent === message) {
+                    status.textContent = '';
+                }
+            }, 3000);
+        }
+
+        function showSyncLog() {
+            if (syncHistory.length === 0) {
+                alert('No sync history yet.');
+                return;
+            }
+            
+            const log = syncHistory.slice(-5).reverse().map(record => 
+                `${new Date(record.timestamp).toLocaleTimeString()}: ${record.added} added, ${record.conflicts} conflicts`
+            ).join('\n');
+            
+            alert('Recent Sync History:\n\n' + log);
+        }
+
+        function clearAllData() {
+            if (confirm('Clear ALL data including quotes, favorites, and sync history?')) {
+                localStorage.clear();
+                quotes = [];
+                favorites = [];
+                syncHistory = [];
+                populateCategories();
+                renderFavorites();
+                showRandomQuote();
+                alert('All data cleared');
+            }
+        }
+
+        // Make functions available globally
+        window.showRandomQuote = showRandomQuote;
+        window.addQuote = addQuote;
+        window.addToFavorites = addToFavorites;
+        window.clearFavorites = clearFavorites;
+        window.filterQuotes = filterQuotes;
+        window.exportQuotes = exportQuotes;
+        window.importFromJsonFile = importFromJsonFile;
+        window.syncWithServer = syncWithServer;
+        window.showSyncLog = showSyncLog;
+        window.clearAllData = clearAllData;
     </script>
 </body>
 </html>
