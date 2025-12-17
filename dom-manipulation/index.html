@@ -5,898 +5,443 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Quote Generator</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Inline styles for immediate visual improvement */
+        /* Reset and base styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
             color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
+            background: #f5f5f5;
+            padding: 20px;
+            max-width: 1000px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
         }
 
-        /* Header Styles */
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2.5rem;
-            text-align: center;
-            position: relative;
-        }
-
-        header h1 {
-            font-size: 2.8rem;
+        /* Header */
+        h1 {
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.95;
-            font-weight: 300;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Main Content Layout */
-        .main-content {
-            display: flex;
-            min-height: 70vh;
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            width: 300px;
-            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-            padding: 2rem;
-            border-right: 2px solid #dee2e6;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .categories-section, .stats-section {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-
-        .categories-section h2, .stats-section h3 {
-            color: #495057;
-            margin-bottom: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.3rem;
-            border-bottom: 2px solid #667eea;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
             padding-bottom: 10px;
         }
 
-        /* Filter Section */
-        .filter-section {
-            margin-bottom: 1.5rem;
-            padding: 1.2rem;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
+        h2 {
+            font-size: 1.8rem;
+            margin: 1.5rem 0 1rem 0;
+            color: #2c3e50;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eee;
         }
 
-        .filter-section label {
-            display: block;
-            margin-bottom: 0.8rem;
-            color: #495057;
-            font-weight: 600;
-            font-size: 1.1rem;
+        h3 {
+            font-size: 1.4rem;
+            margin: 1.2rem 0 0.8rem 0;
+            color: #34495e;
         }
 
-        .category-filter-dropdown {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            font-size: 1rem;
+        /* Main container */
+        .container {
             background: white;
-            color: #495057;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .category-filter-dropdown:hover {
-            border-color: #5a67d8;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
-            transform: translateY(-1px);
-        }
-
-        .category-filter-dropdown:focus {
-            outline: none;
-            border-color: #5a67d8;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
-        }
-
-        /* Category Tags */
-        .categories-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 1.2rem 0;
-        }
-
-        .category-tag {
-            background: linear-gradient(135deg, #e9ecef, #dee2e6);
-            padding: 10px 18px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            font-weight: 500;
-            color: #495057;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .category-tag:hover {
-            background: linear-gradient(135deg, #dee2e6, #ced4da);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .category-tag.filtered {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
-            border-color: #5a67d8;
-        }
-
-        .category-tag i {
-            font-size: 0.9rem;
-        }
-
-        /* Add Category Form */
-        .add-category {
-            display: flex;
-            gap: 12px;
-            margin-top: 1.5rem;
-        }
-
-        .add-category input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #ced4da;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .add-category input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .add-category button {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .add-category button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
-        }
-
-        /* Statistics Section */
-        .stats {
-            background: #f8f9fa;
+        /* Sections */
+        section {
+            margin-bottom: 2.5rem;
             padding: 1.5rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-
-        .stats p {
-            margin: 12px 0;
-            color: #495057;
-            font-size: 1.05rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .stats span {
-            font-weight: 700;
-            color: #667eea;
-            background: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 2px solid #dee2e6;
-        }
-
-        /* Content Area */
-        .content-area {
-            flex: 1;
-            padding: 2rem;
             background: #f8f9fa;
-        }
-
-        /* Quote Display Section */
-        .quote-display-section {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 8px;
             border: 1px solid #e9ecef;
         }
 
-        .quote-display {
-            margin-bottom: 2.5rem;
-            padding: 2rem;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 15px;
-            border-left: 5px solid #667eea;
+        .sync-section {
+            background: #e8f4f8;
+            border-color: #b8e2f2;
         }
 
-        .quote-text {
-            font-size: 1.8rem;
-            color: #2c3e50;
-            font-style: italic;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-            font-weight: 500;
+        /* Form elements */
+        .form-group {
+            margin-bottom: 1.2rem;
         }
 
-        .quote-category {
-            color: #667eea;
-            font-weight: 700;
-            font-size: 1.2rem;
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        small {
+            display: block;
+            margin-top: 0.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Checkboxes and radio buttons */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 0.8rem 0;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .quote-category span {
-            background: #667eea;
+        .btn-primary {
+            background: #3498db;
             color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-size: 1rem;
         }
 
-        .filter-info {
-            margin-top: 1.5rem;
-            padding: 1rem 1.5rem;
-            background: #e8f4fd;
-            border-radius: 10px;
-            border-left: 4px solid #3498db;
-            color: #2c3e50;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
         }
 
-        .filter-info i {
+        .btn-secondary {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #27ae60;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: white;
             color: #3498db;
-            font-size: 1.2rem;
+            border: 2px solid #3498db;
+        }
+
+        .btn-outline:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        /* Favorite quotes section */
+        #favoritesList {
+            min-height: 100px;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            margin-top: 10px;
+        }
+
+        .favorite-item {
+            padding: 10px;
+            margin: 8px 0;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+        }
+
+        .no-favorites {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        /* Quote display */
+        .quote-display {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #3498db;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .quote-text {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .quote-category {
+            color: #3498db;
+            font-weight: 600;
         }
 
         /* Controls */
         .controls {
             display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.05rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             gap: 10px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            min-width: 180px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #ffc107, #ffb142);
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, #e0a800, #ffa500);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(255, 193, 7, 0.3);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #dc3545, #c0392b);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: linear-gradient(135deg, #c82333, #a93226);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: linear-gradient(135deg, #218838, #1abc9c);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
-        }
-
-        /* Add Quote Section */
-        .add-quote-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            margin-bottom: 2rem;
-            border: 1px solid #e9ecef;
-        }
-
-        .add-quote-section h2 {
-            color: #495057;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            border-bottom: 2px solid #28a745;
-            padding-bottom: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 14px 18px;
-            margin: 8px 0;
-            border: 2px solid #ced4da;
-            border-radius: 8px;
-            font-size: 1.05rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        /* Favorites Section */
-        .favorites-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            margin-bottom: 2rem;
-            border: 1px solid #e9ecef;
-        }
-
-        .favorites-section h2 {
-            color: #495057;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            border-bottom: 2px solid #ffc107;
-            padding-bottom: 10px;
-        }
-
-        .favorites-list {
-            max-height: 350px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        .favorite-item {
-            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-            border-left: 5px solid #ffc107;
-            padding: 1.5rem;
-            margin: 15px 0;
-            border-radius: 12px;
-            animation: slideIn 0.3s ease;
-            transition: all 0.3s ease;
-        }
-
-        .favorite-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.2);
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .favorite-text {
-            font-size: 1.2rem;
-            color: #856404;
-            font-style: italic;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .favorite-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1rem;
-            color: #666;
-            font-size: 0.95rem;
-        }
-
-        .favorite-category {
-            background: #ffc107;
-            color: #333;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        .favorite-date {
-            color: #666;
-            font-style: italic;
-        }
-
-        .btn-remove {
-            background: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: 1px solid #dc3545;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-remove:hover {
-            background: #dc3545;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .no-favorites {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            padding: 2rem;
-            font-size: 1.1rem;
-        }
-
-        /* Import/Export Section */
-        .import-export-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            margin-bottom: 2rem;
-            border: 1px solid #e9ecef;
-        }
-
-        .import-export-section h2 {
-            color: #495057;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .storage-status {
             margin: 1.5rem 0;
-            padding: 1rem 1.5rem;
-            background: #e8f4fd;
-            border-radius: 10px;
-            border-left: 4px solid #3498db;
-            color: #2c3e50;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .storage-status i {
-            color: #3498db;
-            font-size: 1.2rem;
-        }
-
-        .import-export-controls {
-            display: flex;
-            gap: 15px;
-            margin: 1.5rem 0;
-            flex-wrap: wrap;
-        }
-
-        .import-export-controls label {
-            cursor: pointer;
-            margin: 0;
-        }
-
-        .help-text {
-            margin-top: 1.5rem;
-            color: #666;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            padding: 1rem;
+        /* Import/Export section */
+        .import-export {
             background: #f8f9fa;
+            padding: 1.5rem;
             border-radius: 8px;
-            border-left: 3px solid #6c757d;
-        }
-
-        .help-text i {
-            color: #6c757d;
-            margin-right: 8px;
-        }
-
-        /* No Quotes Message */
-        .no-quotes-message {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-            border-radius: 12px;
-            border: 2px dashed #ffc107;
-            color: #856404;
-            margin: 1.5rem 0;
-            font-size: 1.1rem;
-        }
-
-        .no-quotes-message i {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #ffc107;
+            margin-top: 1rem;
         }
 
         /* Footer */
         footer {
-            background: linear-gradient(135deg, #343a40, #212529);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+            font-size: 0.9rem;
         }
 
         footer p {
-            margin: 10px 0;
-            font-size: 1.1rem;
+            margin: 5px 0;
         }
 
-        footer small {
-            opacity: 0.8;
-            font-size: 0.9rem;
-            color: #adb5bd;
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .main-content {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 2px solid #dee2e6;
-            }
-            
-            header h1 {
-                font-size: 2.2rem;
-            }
-            
-            .quote-text {
-                font-size: 1.5rem;
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .button-group,
             .controls {
                 flex-direction: column;
-                align-items: center;
             }
             
             button {
                 width: 100%;
-                max-width: 300px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #1a1a1a;
+                color: #e0e0e0;
             }
             
-            .import-export-controls {
-                flex-direction: column;
+            .container {
+                background: #2d2d2d;
             }
             
-            header h1 {
-                flex-direction: column;
-                gap: 10px;
+            section {
+                background: #333;
+                border-color: #444;
             }
             
-            .favorite-meta {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
+            input[type="text"],
+            select {
+                background: #333;
+                color: #e0e0e0;
+                border-color: #555;
             }
-        }
-
-        /* Dark Theme */
-        .dark-theme {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-        }
-
-        .dark-theme .container {
-            background: #2c3e50;
-            color: #ecf0f1;
-        }
-
-        .dark-theme header {
-            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
-        }
-
-        .dark-theme .sidebar {
-            background: linear-gradient(to bottom, #34495e, #2c3e50);
-            border-right-color: #1a252f;
-        }
-
-        .dark-theme .categories-section,
-        .dark-theme .stats-section,
-        .dark-theme .quote-display-section,
-        .dark-theme .add-quote-section,
-        .dark-theme .favorites-section,
-        .dark-theme .import-export-section {
-            background: #34495e;
-            border-color: #4a6572;
-            color: #ecf0f1;
-        }
-
-        .dark-theme .category-tag {
-            background: linear-gradient(135deg, #4a6572, #5d6d7e);
-            color: #ecf0f1;
-        }
-
-        .dark-theme .category-tag.filtered {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-        }
-
-        .dark-theme .quote-text {
-            color: #ecf0f1;
-        }
-
-        .dark-theme .form-group input,
-        .dark-theme .form-group select,
-        .dark-theme .category-filter-dropdown {
-            background: #4a6572;
-            color: #ecf0f1;
-            border-color: #5d6d7e;
-        }
-
-        .dark-theme .favorite-item {
-            background: linear-gradient(135deg, #5d4037, #8d6e63);
-            border-left-color: #ffa726;
-        }
-
-        .dark-theme .favorite-text {
-            color: #ffcc80;
-        }
-
-        .dark-theme .no-quotes-message {
-            background: linear-gradient(135deg, #5d4037, #8d6e63);
-            border-color: #ffa726;
-            color: #ffcc80;
-        }
-
-        .dark-theme footer {
-            background: linear-gradient(135deg, #1a252f, #0c1117);
+            
+            #favoritesList {
+                background: #333;
+                border-color: #444;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-quote-left"></i> Dynamic Quote Generator</h1>
-            <p class="subtitle">Generate, manage, and filter your favorite quotes</p>
-        </header>
+        <h1>Dynamic Quote Generator</h1>
+        
+        <section class="quote-display-section">
+            <div id="quoteDisplay" class="quote-display">
+                <p class="quote-text">"The only way to do great work is to love what you do."</p>
+                <p class="quote-category">Category: Inspiration</p>
+            </div>
+            
+            <div class="controls">
+                <button id="newQuote" class="btn-primary">
+                    Show New Quote
+                </button>
+                <button id="favoriteQuote" class="btn-secondary">
+                    Add to Favorites
+                </button>
+            </div>
+        </section>
 
-        <div class="main-content">
-            <div class="sidebar">
-                <div class="categories-section">
-                    <h2><i class="fas fa-tags"></i> Categories</h2>
-                    
-                    <!-- Task 2: Dropdown filter -->
-                    <div class="filter-section">
-                        <label for="categoryFilter"><i class="fas fa-filter"></i> Filter by Category:</label>
-                        <select id="categoryFilter" class="category-filter-dropdown">
-                            <option value="all">All Categories</option>
-                            <!-- Dynamically populated categories -->
-                        </select>
-                    </div>
-                    
-                    <div class="categories-list" id="categoriesList">
-                        <!-- Category tags will be dynamically added here -->
-                    </div>
-                    
-                    <div class="add-category">
-                        <input type="text" id="newCategory" placeholder="Add new category">
-                        <button onclick="addNewCategory()">
-                            <i class="fas fa-plus"></i> Add Category
-                        </button>
-                    </div>
+        <section class="sync-section">
+            <h2>Server Sync Settings</h2>
+            
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoSync" checked>
+                    <label for="autoSync">Auto-sync: Interval</label>
                 </div>
-                
-                <div class="stats-section">
-                    <h3><i class="fas fa-chart-bar"></i> Statistics</h3>
-                    <div class="stats">
-                        <p>Total Quotes: <span id="totalQuotes">0</span></p>
-                        <p>Total Categories: <span id="totalCategories">0</span></p>
-                        <p>Last Filter: <span id="lastFilter">All Categories</span></p>
-                        <p>Last Updated: <span id="lastUpdated">Never</span></p>
-                        <!-- Storage info button will be added dynamically -->
-                    </div>
+                <select id="syncInterval">
+                    <option value="30000">30 seconds</option>
+                    <option value="60000" selected>1 minute</option>
+                    <option value="300000">5 minutes</option>
+                    <option value="600000">10 minutes</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Sync Strategy</label>
+                <div class="checkbox-group">
+                    <input type="radio" id="strategyServer" name="syncStrategy" checked>
+                    <label for="strategyServer">Server wins (default)</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="radio" id="strategyOverwrite" name="syncStrategy">
+                    <label for="strategyOverwrite">Overwrite with Server</label>
                 </div>
             </div>
-
-            <div class="content-area">
-                <div class="quote-display-section">
-                    <div id="quoteDisplay" class="quote-display">
-                        <p class="quote-text">Click "Show New Quote" to see your first quote!</p>
-                        <p class="quote-category">Category: <span>None</span></p>
-                        <div class="filter-info" id="filterInfo">
-                            <i class="fas fa-info-circle"></i> Showing quotes from: <strong>All Categories</strong>
-                        </div>
-                    </div>
-                    
-                    <div class="controls">
-                        <button id="newQuote" class="btn-primary">
-                            <i class="fas fa-random"></i> Show New Quote
-                        </button>
-                        <button id="favoriteQuote" class="btn-secondary">
-                            <i class="far fa-star"></i> Add to Favorites
-                        </button>
-                        <button id="clearFavorites" class="btn-danger">
-                            <i class="fas fa-trash"></i> Clear Favorites
-                        </button>
-                        <!-- Theme toggle button will be added dynamically -->
-                    </div>
-                </div>
-
-                <div class="add-quote-section">
-                    <h2><i class="fas fa-plus-circle"></i> Add New Quote</h2>
-                    <div class="form-group">
-                        <input type="text" id="newQuoteText" placeholder="Enter a new quote (e.g., 'Life is beautiful!')">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="newQuoteCategory" placeholder="Enter quote category (e.g., 'Life')">
-                        <select id="existingCategories">
-                            <option value="">Or select existing category</option>
-                        </select>
-                    </div>
-                    <button onclick="addQuote()" class="btn-success">
-                        <i class="fas fa-save"></i> Add Quote
-                    </button>
-                </div>
-
-                <div class="favorites-section">
-                    <h2><i class="fas fa-star"></i> Favorite Quotes</h2>
-                    <div id="favoritesList" class="favorites-list">
-                        <!-- Favorite quotes will appear here -->
-                    </div>
-                </div>
-                
-                <div class="import-export-section">
-                    <h2><i class="fas fa-file-export"></i> Import/Export (JSON Handling)</h2>
-                    <div class="storage-status" id="storageStatus">
-                        <i class="fas fa-database"></i> 
-                        Data is automatically saved to localStorage
-                    </div>
-                    <div class="import-export-controls">
-                        <button onclick="exportQuotes()" class="btn-primary">
-                            <i class="fas fa-download"></i> Export Quotes to JSON
-                        </button>
-                        <label class="btn-secondary">
-                            <i class="fas fa-upload"></i> Import Quotes from JSON
-                            <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" style="display: none;">
-                        </label>
-                        <button onclick="clearAllStorage()" class="btn-danger">
-                            <i class="fas fa-trash-alt"></i> Clear All Storage
-                        </button>
-                    </div>
-                    <p class="help-text">
-                        <small>
-                            <i class="fas fa-info-circle"></i>
-                            Export saves all quotes to a JSON file. Import adds quotes from a JSON file to your collection.
-                            All data is automatically saved to localStorage and persists across browser sessions.
-                        </small>
-                    </p>
-                </div>
+            
+            <div class="form-group">
+                <label>Server URL</label>
+                <input type="text" id="serverUrl" value="https://jsonplaceholder.typicode.com/posts">
+                <small>Using JSONPlaceholder mock API</small>
             </div>
-        </div>
+            
+            <div class="button-group">
+                <button onclick="syncWithServer()" class="btn-primary">
+                    Sync Now
+                </button>
+                <button onclick="exportLocalData()" class="btn-outline">
+                    Backup Local Data
+                </button>
+            </div>
+        </section>
+
+        <section>
+            <h2>Add New Quote</h2>
+            
+            <div class="form-group">
+                <input type="text" id="newQuoteText" placeholder="Enter a new quote">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="newQuoteCategory" placeholder="Enter quote category">
+            </div>
+            
+            <div class="form-group">
+                <select id="existingCategories">
+                    <option value="">Or select existing category</option>
+                    <option value="Inspiration">Inspiration</option>
+                    <option value="Life">Life</option>
+                    <option value="Motivation">Motivation</option>
+                </select>
+            </div>
+            
+            <button onclick="addQuote()" class="btn-secondary">
+                Add Quote
+            </button>
+        </section>
+
+        <section>
+            <h2>Favorite Quotes</h2>
+            <div id="favoritesList" class="favorites-list">
+                <div class="no-favorites">No favorite quotes yet. Add some!</div>
+            </div>
+        </section>
+
+        <section class="import-export">
+            <h3>Import/Export</h3>
+            
+            <div class="button-group">
+                <button onclick="exportQuotes()" class="btn-primary">
+                    Export Quotes
+                </button>
+                <button onclick="document.getElementById('importFile').click()" class="btn-secondary">
+                    Import Quotes
+                </button>
+                <button onclick="clearAllStorage()" class="btn-danger">
+                    Clear Storage
+                </button>
+            </div>
+            
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importFromJsonFile(event)">
+        </section>
 
         <footer>
             <p>DOM Manipulation, Web Storage, and JSON Data Project</p>
-            <p><small>Task 0: Dynamic Content Generator | Task 1: Web Storage & JSON Handling | Task 2: Dynamic Content Filtering</small></p>
+            <p>Task 0: Dynamic Content Generator | Task 1: Web Storage & JSON Handling | Task 2: Dynamic Content Filtering | Task 3: Server Sync & Conflict Resolution</p>
         </footer>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load any saved data
+            if (typeof initApp === 'function') {
+                initApp();
+            }
+        });
+    </script>
 </body>
 </html>
