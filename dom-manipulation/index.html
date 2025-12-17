@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Quote Generator</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Minimal inline styles for backup */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 20px auto; background: white; padding: 20px; }
+        h1 { text-align: center; }
+        section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        button, input, select { padding: 10px; margin: 5px 0; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -18,50 +27,37 @@
                 <div class="quote-category">Category: None</div>
             </div>
             <button id="newQuote">Show New Quote</button>
-            <button id="addToFavorites">Add to Favorites</button>
+        </section>
+        
+        <!-- TASK 0: Add Quote Form (Dynamically created by createAddQuoteForm) -->
+        <section id="addQuoteSection">
+            <h2>Add New Quote</h2>
+            <!-- Form will be created by createAddQuoteForm() -->
         </section>
         
         <!-- TASK 2: Filtering -->
         <section>
             <h2>Filter Quotes</h2>
-            <select id="categoryFilter">
+            <select id="categoryFilter" onchange="filterQuotes()">
                 <option value="all">All Categories</option>
+                <!-- Categories populated by populateCategories() -->
             </select>
             <div id="categoriesList"></div>
         </section>
         
-        <!-- TASK 0: Add Quote -->
-        <section>
-            <h2>Add New Quote</h2>
-            <input type="text" id="newQuoteText" placeholder="Enter quote text">
-            <input type="text" id="newQuoteCategory" placeholder="Enter category">
-            <select id="existingCategories">
-                <option value="">Or select existing category</option>
-            </select>
-            <button id="addQuoteBtn">Add Quote</button>
-        </section>
-        
         <!-- TASK 3: Server Sync -->
-        <section id="syncSection">
+        <section>
             <h2>Server Sync</h2>
             <div id="syncStatus"></div>
-            <button id="syncNowBtn">Sync Now</button>
-        </section>
-        
-        <!-- TASK 1: Favorites -->
-        <section>
-            <h2>Favorite Quotes</h2>
-            <div id="favoritesList"></div>
-            <button id="clearFavoritesBtn">Clear Favorites</button>
+            <button onclick="syncWithServer()">Sync Now</button>
         </section>
         
         <!-- TASK 1: Import/Export -->
         <section>
             <h2>Import/Export</h2>
-            <button id="exportQuotesBtn">Export Quotes</button>
-            <button id="importQuotesBtn">Import Quotes</button>
-            <input type="file" id="importFile" accept=".json" style="display: none;">
-            <button id="clearAllDataBtn">Clear All Data</button>
+            <button onclick="exportQuotes()">Export Quotes</button>
+            <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" style="display: block; margin: 10px 0;">
+            <button onclick="clearAllData()">Clear All Data</button>
         </section>
     </div>
 
